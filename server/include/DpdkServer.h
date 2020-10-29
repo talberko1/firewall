@@ -10,21 +10,33 @@
 #include "IDpdkEndDevice.h"
 #include "WorkerThread.h"
 #include "SqliteDB.h"
+#include "EthLayer.h"
+#include "IPv4Layer.h"
+#include "TcpLayer.h"
+#include "PayloadLayer.h"
+#include "PcapFileCreator.h"
+#include <iostream>
 
 class DpdkServer : IDpdkEndDevice {
 private:
-    pcpp::DpdkDevice *m_RxDevice;
-    pcpp::DpdkDevice *m_TxDevice;
-    uint16_t m_Port;
+    pcpp::DpdkDevice *m_DpdkDevice;
     SqliteDB m_Db;
 public:
-    DpdkServer(uint32_t rxDeviceId, uint32_t txDeviceId, uint16_t port, const char *dbName);
+    DpdkServer(uint32_t DpdkDeviceId, const char *dbName);
 
     uint16_t receive(pcpp::MBufRawPacket **packets, uint16_t length, uint16_t queueId) override;
 
-    void process(pcpp::Packet packet) override;
+    void process(pcpp::MBufRawPacket **packets, uint16_t received) override;
 
     uint16_t send(pcpp::MBufRawPacket **packets, uint16_t length, uint16_t queueId) override;
+
+    void createFilteredFile(pcpp::Packet &packet);
+
+    static void createUnfilteredFile(pcpp::Packet &packet);
+
+    void sendFilteredFile(pcpp::Packet &packet);
+
+    bool filter(pcpp::Packet &parsedPacket);
 
     void run();
 
