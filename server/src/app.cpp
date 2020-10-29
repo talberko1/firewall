@@ -5,9 +5,7 @@
 
 constexpr auto MBUF_POOL_SIZE = 65535;
 
-constexpr auto RX_DEVICE_ID = 0;
-
-constexpr auto TX_DEVICE_ID = 0;
+constexpr auto DEVICE_ID = 1;
 
 constexpr auto PORT = 3000;
 
@@ -19,7 +17,7 @@ int main(int argc, char *argv[]) {
         DpdkDeviceManager::initDpdk(pcpp::getCoreMaskForAllMachineCores(), MBUF_POOL_SIZE);
         std::cout << "Successfully initialized DPDK!" << std::endl;
 
-        DpdkServer server(RX_DEVICE_ID, TX_DEVICE_ID, PORT, DB_NAME);
+        DpdkServer server(DEVICE_ID, DB_NAME);
         server.run();
     }
     catch (DpdkDeviceException &e) {
