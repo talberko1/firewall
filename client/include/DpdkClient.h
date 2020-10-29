@@ -6,44 +6,41 @@
 #define CLIENT_DPDKCLIENT_H
 
 #include <exception>
-#include <iostream>
 #include "PlatformSpecificUtils.h"
 #include "DpdkDeviceManager.h"
 #include "PcapFileManager.h"
-#include "WorkerThread.h"
+#include "GeneralTrafficThread.h"
+#include "TargetedThread.h"
 #include "IDpdkEndDevice.h"
 #include "IPv4Layer.h"
 #include "EthLayer.h"
 #include "TcpLayer.h"
 #include "PayloadLayer.h"
-#include "Layer.h"
+#include "PcapFileCreator.h"
+#include <iostream>
 
 class DpdkClient : IDpdkEndDevice {
 private:
-    pcpp::DpdkDevice *m_RxDevice;
-    pcpp::DpdkDevice *m_TxDevice;
-    pcpp::IPv4Address m_ServerAddress;
-    uint16_t m_Port;
+    pcpp::DpdkDevice *m_DpdkDevice;
+    pcpp::MacAddress m_ServerMacAddress;
 public:
-    explicit DpdkClient(int rxDeviceId, int txDeviceId, const char *serverIp, uint16_t port);
-
-    pcpp::MBufRawPacket *decapsulatePacket(pcpp::Packet &packet) override;
+    explicit DpdkClient(int dpdkDeviceId, const char *serverMacAddress);
 
     uint16_t receive(pcpp::MBufRawPacket **packets, uint16_t length, uint16_t queueId) override;
 
-    bool process(pcpp::MBufRawPacket* packet) override;
-
-    pcpp::MBufRawPacket *encapsulatePacket(pcpp::MBufRawPacket *packet) override;
+    void process(pcpp::MBufRawPacket **packets, uint16_t received) override;
 
     uint16_t send(pcpp::MBufRawPacket **packets, uint16_t length, uint16_t queueId) override;
 
-    void save(pcpp::MBufRawPacket* packet);
+    void startGeneralThread(const char *output);
 
-    void startCapture(const char *output);
+    void startTargetedThread(const char *output);
 
-    void stopCapture();
+    void save(pcpp::MBufRawPacket *packet);
 
-    void send(const char *input);
+    static void stopCapture();
+
+    void sendPcapFile(const char *input);
 };
 
 
