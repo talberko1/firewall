@@ -8,7 +8,6 @@
 
 #ifndef SERVER_RECEIVERTHREAD_H
 #define SERVER_RECEIVERTHREAD_H
-constexpr auto MAX_RECEIVE_BURST = 64;
 
 class WorkerThread : public pcpp::DpdkWorkerThread {
 private:
