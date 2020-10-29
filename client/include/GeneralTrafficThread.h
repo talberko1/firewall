@@ -2,16 +2,14 @@
 // Created by tal on 8/24/20.
 //
 
-#ifndef CLIENT_WORKERTHREAD_H
-#define CLIENT_WORKERTHREAD_H
+#ifndef CLIENT_GENERALTRAFFICTHREAD_H
+#define CLIENT_GENERALTRAFFICTHREAD_H
 
 #include "DpdkDeviceList.h"
 #include "PcapFileManager.h"
 #include "IDpdkEndDevice.h"
 
-constexpr auto MAX_RECEIVE_BURST = 64;
-
-class WorkerThread : public pcpp::DpdkWorkerThread {
+class GeneralTrafficThread : public pcpp::DpdkWorkerThread {
 private:
     IDpdkEndDevice *m_Device;
     bool m_Stop;
@@ -19,9 +17,9 @@ private:
 
     const char *m_Output;
 public:
-    WorkerThread(IDpdkEndDevice *device, const char *output);
+    GeneralTrafficThread(IDpdkEndDevice *device, const char *output);
 
-    ~WorkerThread() {}
+    ~GeneralTrafficThread() {}
 
     bool run(uint32_t coreId) override;
 
@@ -30,4 +28,4 @@ public:
     uint32_t getCoreId() const override;
 };
 
-#endif //CLIENT_WORKERTHREAD_H
+#endif //CLIENT_GENERALTRAFFICTHREAD_H
