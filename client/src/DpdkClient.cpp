@@ -38,13 +38,13 @@ uint16_t DpdkClient::send(pcpp::MBufRawPacket **packets, uint16_t length, uint16
 
 void DpdkClient::startGeneralThread(const char *output) {
     std::vector<pcpp::DpdkWorkerThread *> workers;
-    workers.push_back(new GeneralTrafficThread(this, output));
+    workers.push_back(new GeneralTrafficThread(m_DpdkDevice, output));
     DpdkDeviceManager::startDpdkWorkerThreads(workers);
 }
 
-void DpdkClient::startTargetedThread(const char *output) {
+void DpdkClient::startTargetedThread() {
     std::vector<pcpp::DpdkWorkerThread *> workers;
-    workers.push_back(new TargetedThread(this, output));
+    workers.push_back(new TargetedThread(this));
     DpdkDeviceManager::startDpdkWorkerThreads(workers);
 }
 
@@ -53,5 +53,14 @@ void DpdkClient::stopCapture() {
 }
 
 void DpdkClient::sendPcapFile(const char *input) {
-
+    const uint8_t *requestData = PcapFileCreator::createByteStreamFromFile(input);
+    long requestLength = PcapFileCreator::getFileSize(input);
+    pcpp::Packet request;
+    pcpp::EthLayer *requestEthernetLayer = new pcpp::EthLayer(m_DpdkDevice->getMacAddress(),
+                                                               m_ServerMacAddress);
+    pcpp::PayloadLayer *requestPayloadLayer = new pcpp::PayloadLayer(requestData, requestLength, false);
+    request.addLayer(requestEthernetLayer);
+    request.addLayer(requestPayloadLayer);
+    request.computeCalculateFields();
+    m_DpdkDevice->sendPacket(request);
 }

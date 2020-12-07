@@ -22,7 +22,7 @@ public:
 
 class DpdkDeviceManager {
 public:
-    static void initDpdk(pcpp::CoreMask coreMask, int mbufPoolSize);
+    static void initDpdk(pcpp::CoreMask coreMask, uint32_t mBufPoolSize);
 
     static pcpp::DpdkDevice *getDevice(int deviceId);
 

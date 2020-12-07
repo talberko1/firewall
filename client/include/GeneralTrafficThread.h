@@ -11,13 +11,13 @@
 
 class GeneralTrafficThread : public pcpp::DpdkWorkerThread {
 private:
-    IDpdkEndDevice *m_Device;
+    pcpp::DpdkDevice *m_Device;
     bool m_Stop;
     uint32_t m_CoreId;
 
     const char *m_Output;
 public:
-    GeneralTrafficThread(IDpdkEndDevice *device, const char *output);
+    GeneralTrafficThread(pcpp::DpdkDevice *device, const char *output);
 
     ~GeneralTrafficThread() {}
 

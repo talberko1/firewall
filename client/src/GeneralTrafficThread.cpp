@@ -3,8 +3,9 @@
 //
 
 #include "GeneralTrafficThread.h"
+#include <iostream>
 
-GeneralTrafficThread::GeneralTrafficThread(IDpdkEndDevice *device, const char *output) :
+GeneralTrafficThread::GeneralTrafficThread(pcpp::DpdkDevice *device, const char *output) :
         m_Device(device), m_Stop(true), m_CoreId(MAX_NUM_OF_CORES - 1), m_Output(output) {}
 
 
@@ -16,12 +17,12 @@ bool GeneralTrafficThread::run(uint32_t coreId) {
 
     pcpp::MBufRawPacket *packets[64] = {};
     while (!m_Stop) {
-        uint16_t received = m_Device->receive(packets, 64, 0);
+        uint16_t received = m_Device->receivePackets(packets, 64, 0);
         if (received) {
             for (int i = 0; i < received; i++) {
                 writer.writePacket(*packets[i]);
             }
-            m_Device->send(packets, received, 0);
+            m_Device->sendPackets(packets, received, 0);
         }
     }
     writer.close();

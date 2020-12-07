@@ -18,7 +18,7 @@ private:
 
     const char *m_Output;
 public:
-    TargetedThread(IDpdkEndDevice *device, const char *output);
+    TargetedThread(IDpdkEndDevice *device);
 
     ~TargetedThread() {}
 

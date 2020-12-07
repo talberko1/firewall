@@ -1,9 +1,10 @@
 #include <iostream>
+#include <unistd.h>
 #include "DpdkClient.h"
 
 constexpr auto DEVICE_ID = 1;
-constexpr auto SLEEP_DURATION = 5;
-constexpr auto MBUF_POOL_SIZE = 65535;
+constexpr auto SLEEP_DURATION = 20;
+constexpr uint32_t MBUF_POOL_SIZE = 16*1024 - 1;
 constexpr auto OUTPUT = "output.pcap";
 constexpr auto SERVER_MAC_ADDRESS = "08:00:27:93:e1:6f";
 
@@ -19,10 +20,10 @@ int main(int argc, char *argv[]) {
 
         std::cout << "Capturing traffic through DPDK device" << std::endl;
         client.startGeneralThread(OUTPUT);
-        PCAP_SLEEP(SLEEP_DURATION);
+        sleep(SLEEP_DURATION);
         DpdkClient::stopCapture();
-        //client.send(OUTPUT);
-        //client.startTargetedThread();
+        client.sendPcapFile(OUTPUT);
+        client.startTargetedThread();
     }
     catch (DpdkDeviceException &e) {
         std::cout << "DPDK-DEVICE-EXCEPTION: " << e.getMessage() << std::endl;

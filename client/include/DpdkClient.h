@@ -6,7 +6,6 @@
 #define CLIENT_DPDKCLIENT_H
 
 #include <exception>
-#include "PlatformSpecificUtils.h"
 #include "DpdkDeviceManager.h"
 #include "PcapFileManager.h"
 #include "GeneralTrafficThread.h"
@@ -34,9 +33,7 @@ public:
 
     void startGeneralThread(const char *output);
 
-    void startTargetedThread(const char *output);
-
-    void save(pcpp::MBufRawPacket *packet);
+    void startTargetedThread();
 
     static void stopCapture();
 

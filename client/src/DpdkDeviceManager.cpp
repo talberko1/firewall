@@ -5,8 +5,8 @@
 #include "DpdkDeviceManager.h"
 #include <iostream>
 
-void DpdkDeviceManager::initDpdk(pcpp::CoreMask coreMask, int mbufPoolSize) {
-    pcpp::DpdkDeviceList::initDpdk(coreMask, mbufPoolSize);
+void DpdkDeviceManager::initDpdk(pcpp::CoreMask coreMask, uint32_t mBufPoolSize) {
+    pcpp::DpdkDeviceList::initDpdk(coreMask, mBufPoolSize);
 }
 
 pcpp::DpdkDevice *DpdkDeviceManager::getDevice(int deviceId) {
