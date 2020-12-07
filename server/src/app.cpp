@@ -2,28 +2,31 @@
 
 #include <iostream>
 #include "DpdkServer.h"
+#include "mongoc.h"
 
-constexpr auto MBUF_POOL_SIZE = 65535;
+constexpr uint32_t MBUF_POOL_SIZE = 16*1024 - 1;
 
-constexpr auto DEVICE_ID = 1;
-
-constexpr auto PORT = 3000;
+constexpr auto DEVICE_ID = 0;
 
 constexpr auto DB_NAME = "rules.db";
 
 int main(int argc, char *argv[]) {
     try {
         std::cout << "Initializing DPDK..." << std::endl;
-        DpdkDeviceManager::initDpdk(pcpp::getCoreMaskForAllMachineCores(), MBUF_POOL_SIZE);
+//        DpdkDeviceManager::initDpdk(pcpp::getCoreMaskForAllMachineCores(), MBUF_POOL_SIZE);
         std::cout << "Successfully initialized DPDK!" << std::endl;
-
-        DpdkServer server(DEVICE_ID, DB_NAME);
-        server.run();
+        std::cout << "Opening DPDK device" << std::endl;
+//        DpdkServer server(DEVICE_ID, DB_NAME);
+        std::cout << "Successfully opened DPDK device" << std::endl;
+//        server.run();
     }
     catch (DpdkDeviceException &e) {
-        std::cout << "DPDK-DEVICE-EXCEPTION: " << e.getMessage() << std::endl;
+        std::cout << "DPDK-DEVICE-EXCEPTION: " << e.what() << std::endl;
+    }
+    catch(SqliteException &e) {
+        std::cout << "SQLITE3-EXCEPTION: " << e.what() << std::endl;
     }
     catch (std::exception &e) {
-        std::cout << "UNHANDLED EXCEPTION CAUGHT" << e.what() << std::endl;
+        std::cout << "UNHANDLED EXCEPTION CAUGHT: " << e.what() << std::endl;
     }
 }

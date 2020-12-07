@@ -27,11 +27,11 @@ typedef struct pcaprec_hdr_s {
 
 class PcapFileCreator {
 public:
-    static long getFileSize(const char *name);
+    static long getFileSize(const char *fileName);
 
-    static void createFileFromBytes(const char *name, const uint8_t *stream, size_t length);
+    static void createFileFromBytes(const char *fileName, char *buffer, long fileSize);
 
-    static uint8_t *createByteStreamFromFile(const char *name);
+    static char *createByteStreamFromFile(const char *fileName, long fileSize);
 };
 
 #endif //SERVER_PCAPFILECREATOR_H

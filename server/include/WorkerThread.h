@@ -11,11 +11,11 @@
 
 class WorkerThread : public pcpp::DpdkWorkerThread {
 private:
-    IDpdkEndDevice* m_Device;
+    pcpp::DpdkDevice *m_Device;
     bool m_Stop;
     uint32_t m_CoreId;
 public:
-    WorkerThread(IDpdkEndDevice* device);
+    WorkerThread(pcpp::DpdkDevice *device);
 
     ~WorkerThread() {}
 
@@ -25,4 +25,5 @@ public:
 
     uint32_t getCoreId() const override;
 };
+
 #endif //SERVER_RECEIVERTHREAD_H

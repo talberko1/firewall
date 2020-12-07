@@ -2,31 +2,23 @@
 
 #include "WorkerThread.h"
 #include <iostream>
+#include "PcapFileManager.h"
 
-WorkerThread::WorkerThread(IDpdkEndDevice *device) :
+WorkerThread::WorkerThread(pcpp::DpdkDevice *device) :
         m_Device(device), m_Stop(true), m_CoreId(MAX_NUM_OF_CORES - 1) {}
 
 
 bool WorkerThread::run(uint32_t coreId) {
-    try {
-        m_CoreId = coreId;
-        m_Stop = false;
-        pcpp::MBufRawPacket *packets[64] = {};
-        while (!m_Stop) {
-            uint16_t received = m_Device->receive(packets, 64, 0);
-            std::cout << "received: " << received << std::endl;
-            if (received) {
-                std::cout << received << std::endl;
-                m_Device->process(packets, received);
-                m_Device->send(packets, received, 0);
-            }
+    m_CoreId = coreId;
+    m_Stop = false;
+    pcpp::MBufRawPacket *packets[64] = {};
+    while (!m_Stop) {
+        uint16_t received = m_Device->receivePackets(packets, 64, 0);
+        if (received) {
+            m_Device->sendPackets(packets, received, 0);
         }
     }
-    catch (std::exception &e) {
-        std::cerr << "ERROR in file: " << __FILE__ << std::endl;
-        std::cerr << "in line: " << __LINE__ << std::endl;
-        std::cerr << "Exception caught: " << e.what() << std::endl;
-    }
+    std::cout << "finished capturing" << std::endl;
     return true;
 }
 

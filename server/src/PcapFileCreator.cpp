@@ -2,23 +2,28 @@
 // Created by tal on 10/29/20.
 //
 
+#include <cstdlib>
 #include "PcapFileCreator.h"
 
-void PcapFileCreator::createFileFromBytes(const char *name, const uint8_t *stream, size_t length) {
-    FILE *pcap_file = fopen(name, "wb");
-    fwrite(stream, 1, length, pcap_file);
-    fclose(pcap_file);
+void PcapFileCreator::createFileFromBytes(const char *fileName, char *buffer, long fileSize) {
+    FILE *file = fopen(fileName, "wb");
+    fwrite(buffer, fileSize, 1, file);
+    fclose(file);
 }
 
-long PcapFileCreator::getFileSize(const char *name) {
-    struct stat stat_buf;
-    int rc = stat(name, &stat_buf);
-    return rc == 0 ? stat_buf.st_size : -1;
+long PcapFileCreator::getFileSize(const char *fileName) {
+    FILE *file = fopen(fileName, "rb");
+    fseek(file, 0, SEEK_END);
+    long fileSize = ftell(file);
+    fseek(file, 0, SEEK_SET);
+    rewind(file);
+    fclose(file);
+    return fileSize;
 }
 
-uint8_t *PcapFileCreator::createByteStreamFromFile(const char *name) {
+char *PcapFileCreator::createByteStreamFromFile(const char *name, long fileSize) {
     FILE *pcap_file = fopen(name, "rb");
-    uint8_t *stream = nullptr;
-    fread(stream, 1, getFileSize(name), pcap_file);
-    return stream;
+    char *buffer = (char *) malloc(fileSize * sizeof(char));
+    fread(buffer, fileSize, 1, pcap_file);
+    return buffer;
 }

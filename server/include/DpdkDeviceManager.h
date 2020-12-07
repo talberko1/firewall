@@ -1,29 +1,25 @@
 //
 // Created by tal on 8/29/20.
 //
-
 #ifndef CLIENT_DPDKDEVICEMANAGER_H
 #define CLIENT_DPDKDEVICEMANAGER_H
 
 #include <string>
 #include <exception>
-
 #include "DpdkDeviceList.h"
 
 class DpdkDeviceException : public std::exception {
 private:
     const char *m_Message;
 public:
-    explicit DpdkDeviceException(const char *message) : m_Message(message) {}
+    explicit DpdkDeviceException(const char *message);
 
-    const char *getMessage() {
-        return m_Message;
-    }
+    const char *what() const noexcept override;
 };
 
 class DpdkDeviceManager {
 public:
-    static void initDpdk(pcpp::CoreMask coreMask, int mbufPoolSize);
+    static void initDpdk(pcpp::CoreMask coreMask, uint32_t mBufPoolSize);
 
     static pcpp::DpdkDevice *getDevice(int deviceId);
 

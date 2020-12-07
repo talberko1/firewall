@@ -2,6 +2,7 @@
 // Created by tal on 10/13/20.
 //
 
+#include <cstdio>
 #include "SqliteDB.h"
 
 SqliteException::SqliteException(const char *message) : m_Message(message) {}

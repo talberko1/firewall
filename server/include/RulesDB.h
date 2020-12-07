@@ -4,34 +4,24 @@
 
 #ifndef SERVER_RULESDB_H
 #define SERVER_RULESDB_H
+
 #include <vector>
 #include <pcapplusplus/IpAddress.h>
 #include <pcapplusplus/ProtocolType.h>
 #include "SqliteDB.h"
 
 struct Rule {
-    const char *name;
-    enum action {
-        FORWARD,
-        DROP
-    };
-    pcpp::IPAddress* srcIp;
-    pcpp::IPAddress* mask;
-    pcpp::IPAddress* dstIp;
-    uint16_t srcPort;
-    uint16_t dstPort;
-    pcpp::ProtocolType protocol;
+
+    pcpp::AndFilter *m_Filter;
+    char *m_Action;
+    Rule(pcpp::AndFilter *andFilter, char *action);
 };
-class RulesDB : SqliteDB {
+
+class RulesDB : public SqliteDB {
 public:
-    RulesDB(const char *name);
+    explicit RulesDB(const char *name);
 
-    Rule& getRule(int ruleId);
-
-    std::vector<Rule> getRules();
-
-    int addRule(struct Rule);
-
-    int removeRule();
+    std::vector<Rule*> getRules();
 };
+
 #endif //SERVER_RULESDB_H

@@ -9,18 +9,20 @@
 #include "DpdkDeviceManager.h"
 #include "IDpdkEndDevice.h"
 #include "WorkerThread.h"
-#include "SqliteDB.h"
+#include "RulesDB.h"
 #include "EthLayer.h"
 #include "IPv4Layer.h"
 #include "TcpLayer.h"
 #include "PayloadLayer.h"
 #include "PcapFileCreator.h"
 #include <iostream>
+#include "PcapFileManager.h"
+#include "PcapFilter.h"
 
 class DpdkServer : IDpdkEndDevice {
 private:
     pcpp::DpdkDevice *m_DpdkDevice;
-    SqliteDB m_Db;
+    RulesDB m_Db;
 public:
     DpdkServer(uint32_t DpdkDeviceId, const char *dbName);
 
@@ -30,13 +32,11 @@ public:
 
     uint16_t send(pcpp::MBufRawPacket **packets, uint16_t length, uint16_t queueId) override;
 
-    void createFilteredFile(pcpp::Packet &packet);
-
     static void createUnfilteredFile(pcpp::Packet &packet);
 
-    void sendFilteredFile(pcpp::Packet &packet);
+    void filter(pcpp::Packet &packet);
 
-    bool filter(pcpp::Packet &parsedPacket);
+    void sendFilteredFile(pcpp::Packet &packet);
 
     void run();
 

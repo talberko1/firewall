@@ -21,13 +21,19 @@ WFLAGS	:=	-Wall -Werror
 
 include /usr/local/etc/PcapPlusPlus.mk
 
-CFLAGS	:=	$(WFLAGS) $(PCAPPP_INCLUDES) -I$(INC_DIR) $(COMPILE)
+MONGO_INCLUDES = -I/usr/local/include/mongocxx/v_noabi -I/usr/local/include/libmongoc-1.0
 
-LDFLAGS	:=	$(WFLAGS) $(PCAPPP_LIBS_DIR)
+BSON_INCLUDES = -I/usr/local/include/bsoncxx/v_noabi -I/usr/local/include/libbson-1.0
+
+
+
+CFLAGS	:=	$(WFLAGS) $(PCAPPP_INCLUDES) $(MONGO_INCLUDES) $(BSON_INCLUDES) -I$(INC_DIR) $(COMPILE)
+
+LDFLAGS	:=	$(WFLAGS) $(PCAPPP_LIBS_DIR) -L/usr/local/lib
 
 #---LIBRARIES---
 
-LIBS	:=	$(PCAPPP_LIBS) -lsqlite3
+LIBS	:=	$(PCAPPP_LIBS) -lmongocxx -lbsoncxx
 
 #==============DO=NOT=EDIT=BELOW=THIS=LINE==============#
 

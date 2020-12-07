@@ -4,8 +4,14 @@
 
 #include "DpdkDeviceManager.h"
 
-void DpdkDeviceManager::initDpdk(pcpp::CoreMask coreMask, int mbufPoolSize) {
-    pcpp::DpdkDeviceList::initDpdk(coreMask, mbufPoolSize);
+DpdkDeviceException::DpdkDeviceException(const char *message) : m_Message(message) {}
+
+const char *DpdkDeviceException::what() const noexcept {
+    return m_Message;
+}
+
+void DpdkDeviceManager::initDpdk(pcpp::CoreMask coreMask, uint32_t mBufPoolSize) {
+    pcpp::DpdkDeviceList::initDpdk(coreMask, mBufPoolSize);
 }
 
 pcpp::DpdkDevice *DpdkDeviceManager::getDevice(int deviceId) {
